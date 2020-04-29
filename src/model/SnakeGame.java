@@ -101,7 +101,7 @@ public class SnakeGame {
         for (SnakePart snakePart : snakeParts) {
             if (snakePart != snakeParts.get(0))
                 if (snakeParts.get(0).getX() == snakePart.getX() && snakeParts.get(0).getY() == snakePart.getY()) {
-                    System.out.println("Game Over");
+                    System.out.println("Game Over " + snakeParts.size());
                     timer.cancel();
                 }
             snakePart.move();

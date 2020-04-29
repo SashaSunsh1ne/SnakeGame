@@ -43,6 +43,14 @@ public class Controller implements Initializable {
         start.setText("RESTART");
     }
 
+    public void changeDifficult(ActionEvent actionEvent) {
+        snakeGame.removeSnake();
+        easy.setVisible(true);
+        medium.setVisible(true);
+        hard.setVisible(true);
+        start.setText("START");
+    }
+
     public void onKeyPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.W || keyEvent.getCode() == KeyCode.UP)
             snakeGame.changeDirection(Direction.UP);
