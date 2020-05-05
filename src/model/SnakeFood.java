@@ -19,8 +19,10 @@ public class SnakeFood extends Rectangle {
         super.setHeight(width);
         super.setWidth(width);
         super.setFill(Color.RED);
-        super.setX(random.nextInt(30) * 20);
-        super.setY(random.nextInt(30) * 20);
+        int x = (int) (random.nextInt((int) (pane.getPrefWidth() / width)) * width);
+        int y = (int) (random.nextInt((int) (pane.getPrefWidth() / width)) * width);
+        super.setX(x);
+        super.setY(y);
         this.snakeParts = snakeParts;
         pane.getChildren().add(this);
         this.pane = pane;
@@ -32,8 +34,8 @@ public class SnakeFood extends Rectangle {
         int y = 0;
         do {
             isMatch = false;
-            x = random.nextInt(30) * 20;
-            y = random.nextInt(30) * 20;
+            x = (int) (random.nextInt((int) (pane.getPrefWidth() / width)) * width);
+            y = (int) (random.nextInt((int) (pane.getPrefWidth() / width)) * width);
             for (SnakePart snakePart : snakeParts) {
                 if (snakePart.getX() == x && snakePart.getY() == y)
                     isMatch = true;

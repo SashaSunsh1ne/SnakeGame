@@ -94,25 +94,25 @@ public class SnakePart extends Rectangle {
 
         if (direction == Direction.UP) {
             if (super.getY() - width < 0)
-                super.setY(pane.getHeight() - width);
+                super.setY(pane.getPrefHeight() - width);
             else
                 super.setY(super.getY() - width);
         }
         else if (direction == Direction.DOWN) {
-            if (super.getY() + 2 * width > pane.getHeight())
+            if (super.getY() + 2 * width > pane.getPrefHeight())
                 super.setY(0);
             else
                 super.setY(super.getY() + width);
         }
         else if (direction == Direction.RIGHT) {
-            if (super.getX() + 2 * width > pane.getWidth())
+            if (super.getX() + 2 * width > pane.getPrefWidth())
                 super.setX(0);
             else
                 super.setX(super.getX() + width);
         }
         else if (direction == Direction.LEFT) {
             if (super.getX() - width < 0)
-                super.setX(pane.getWidth() - width);
+                super.setX(pane.getPrefWidth() - width);
             else
                 super.setX(super.getX() - width);
         }

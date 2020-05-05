@@ -5,19 +5,15 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#onKeyPressed" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
-   <center>
-      <Pane fx:id="pane" prefHeight="600.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="73.0" prefWidth="415.0" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
+   <top>
+      <Pane fx:id="pane" prefHeight="339.0" prefWidth="430.0" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutX="281.0" layoutY="519.0" mnemonicParsing="false" onAction="#up" text="^" />
-            <Button layoutX="251.0" layoutY="537.0" mnemonicParsing="false" onAction="#left" text="&lt;" />
-            <Button layoutX="311.0" layoutY="537.0" mnemonicParsing="false" onAction="#right" text="&gt;" />
-            <Button layoutX="282.0" layoutY="553.0" mnemonicParsing="false" onAction="#down" text="v" />
-            <Button fx:id="start" layoutX="502.0" layoutY="538.0" mnemonicParsing="false" onAction="#restart" text="START" />
-            <RadioButton fx:id="medium" layoutX="254.0" layoutY="261.0" mnemonicParsing="false" text="Medium" />
-            <RadioButton fx:id="easy" layoutX="145.0" layoutY="261.0" mnemonicParsing="false" text="Easy" />
-            <RadioButton fx:id="hard" layoutX="381.0" layoutY="261.0" mnemonicParsing="false" text="Hard" />
-            <Button fx:id="start1" layoutX="379.0" layoutY="538.0" mnemonicParsing="false" onAction="#changeDifficult" text="ChangeDifficult" />
+            <Button fx:id="start" layoutX="264.0" layoutY="21.0" mnemonicParsing="false" onAction="#restart" text="START" />
+            <RadioButton fx:id="medium" layoutX="86.0" layoutY="26.0" mnemonicParsing="false" text="Medium" />
+            <RadioButton fx:id="easy" layoutX="14.0" layoutY="26.0" mnemonicParsing="false" text="Easy" />
+            <RadioButton fx:id="hard" layoutX="178.0" layoutY="26.0" mnemonicParsing="false" text="Hard" />
+            <Button fx:id="start1" layoutX="347.0" layoutY="21.0" mnemonicParsing="false" onAction="#restart" text="QUIT" />
          </children></Pane>
-   </center>
+   </top>
 </BorderPane>
