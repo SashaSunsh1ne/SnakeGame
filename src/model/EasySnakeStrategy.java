@@ -8,8 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polyline;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -124,9 +124,10 @@ public class EasySnakeStrategy implements SnakeGame {
                     text.setLayoutY(pane.getPrefHeight() / 2);
                     text.setWrappingWidth(pane.getPrefWidth());
                     pane.getChildren().add(text);
-
                     System.out.println("Game Over " + snakeParts.size());
                     timer.cancel();
+                    pane.getChildren().remove(score);
+                    pane.getChildren().add(score);
                 }
             snakePart.move();
         }
@@ -145,7 +146,6 @@ public class EasySnakeStrategy implements SnakeGame {
         pane = new Pane();
         pane.setPrefWidth(paneSide);
         pane.setPrefHeight(paneSide);
-        pane.setStyle("-fx-border-color: black");
 
         Button button = new Button();
         button.setPrefHeight(0);
@@ -167,22 +167,18 @@ public class EasySnakeStrategy implements SnakeGame {
             }
         });
         pane.getChildren().add(button);
+        Polyline pLine = new Polyline(0, 0, paneSide, 0, paneSide, paneSide, 0, paneSide, 0, 0);
+        pLine.setStrokeWidth(5);
+        pLine.setStroke(Color.BLACK);
+        pane.getChildren().add(pLine);
         addOnPane();
 
-        StackPane secondaryLayout = new StackPane();
-        secondaryLayout.prefHeight(paneSide);
-        secondaryLayout.prefHeight(paneSide);
-        secondaryLayout.getChildren().add(pane);
-
-        Scene snakeScene = new Scene(secondaryLayout, paneSide, paneSide);
+        Scene snakeScene = new Scene(pane, paneSide, paneSide);
 
         newWindow = new Stage();
         newWindow.setTitle("SnakeGame");
         newWindow.setScene(snakeScene);
-        newWindow.setMaxHeight(paneSide + 100);
-        newWindow.setMaxWidth(paneSide + 100);
-        newWindow.setMinWidth(paneSide);
-        newWindow.setMinHeight(paneSide);
+        newWindow.setResizable(false);
         newWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {

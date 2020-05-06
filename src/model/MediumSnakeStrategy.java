@@ -10,10 +10,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polyline;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -122,9 +124,10 @@ public class MediumSnakeStrategy implements SnakeGame{
                     text.setLayoutY(pane.getPrefHeight() / 2);
                     text.setWrappingWidth(pane.getPrefWidth());
                     pane.getChildren().add(text);
-
                     System.out.println("Game Over " + snakeParts.size());
                     timer.cancel();
+                    pane.getChildren().remove(score);
+                    pane.getChildren().add(score);
                 }
             snakePart.move();
         }
@@ -165,6 +168,10 @@ public class MediumSnakeStrategy implements SnakeGame{
             }
         });
         pane.getChildren().add(button);
+        Polyline pLine = new Polyline(0, 0, paneSide, 0, paneSide, paneSide, 0, paneSide, 0, 0);
+        pLine.setStrokeWidth(5);
+        pLine.setStroke(Color.BLACK);
+        pane.getChildren().add(pLine);
         addOnPane();
 
         StackPane secondaryLayout = new StackPane();
@@ -177,9 +184,16 @@ public class MediumSnakeStrategy implements SnakeGame{
         newWindow = new Stage();
         newWindow.setTitle("SnakeGame");
         newWindow.setScene(snakeScene);
-        newWindow.setMaxHeight(paneSide + 100);
+        newWindow.setResizable(false);
+        newWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                timer.cancel();
+            }
+        });
+        /*newWindow.setMaxHeight(paneSide + 100);
         newWindow.setMaxWidth(paneSide + 100);
         newWindow.setMinWidth(paneSide);
-        newWindow.setMinHeight(paneSide);
+        newWindow.setMinHeight(paneSide);*/
     }
 }
