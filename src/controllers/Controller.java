@@ -8,7 +8,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import model.*;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 

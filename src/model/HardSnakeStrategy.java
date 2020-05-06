@@ -1,9 +1,11 @@
 package model;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -23,9 +25,7 @@ import java.util.TimerTask;
 
 public class HardSnakeStrategy implements SnakeGame {
 
-
-
-    TextField score;
+    private TextField score;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -39,6 +39,43 @@ public class HardSnakeStrategy implements SnakeGame {
     private Pane pane;
     private Stage newWindow;
 
+    private Stage aboutWindow = new Stage();
+    private String about = "# SnakeGame\n" +
+            "Snake Game / Golikov Alexander \n" +
+            "Стандартная игра змейка\n" +
+            "\n" +
+            "Сложности:\n" +
+            "  1) Легкая - скорость маленькая, размер поля - 200x200 пикселей\n" +
+            "  2) Средняя - скорость средняя, размер поля - 200x200 пикселей\n" +
+            "  3) Сложная - скорость высокая, размер поля - 400x400 пикселей\n" +
+            "\n" +
+            "Функционал: \n" +
+            "  1) Кнопки для начала и окончания игры\n" +
+            "  2) Выбор сложности\n" +
+            "  3) Запускается змейка в отдельном окне, чтобы не быть зависимой от окна пользователя, так же это дает возможность реализовать несколько игр, которые будут открываться в разых окнах, а не рисовать все в одной панели.\n" +
+            "  3) Реализация сложностей по паттерну \"Стратегия\" (интерфейс с общими методами и тремя классами, которые влияют на сложность змейки)\n" +
+            "  4) При закритии приложения любым способом закрываются все фоновые процессы.\n" +
+            "  5) При выходе за пределы поля змейка переместится в противоположную сторону.\n" +
+            "  6) Управлять змейкой можно только с помощью клавиатуры с помощью нажатий на клавиши W(вверх), A(влево), S(вниз) и D(вправо), так же управление работает на стрелки.\n" +
+            "  7) Происходит проверка перед каждым поворотом змеи поэтому если она двигается вертикально, то повернуль можно только так, чтобы она начала двигаться горизантально и наоборот\n" +
+            "  8) Победа достигается если змейка заполнит все поле и \"еде\" негде будет появляться\n" +
+            "  9) При поражении появляется кнопка About в которой содержится описание игры.\n" +
+            "\n" +
+            "Архитектура:\n" +
+            "\n" +
+            "  Model:\n" +
+            "  1) Интерфейс змейки (SnakeGame) с общими методами\n" +
+            "  2) Три класса змейки, которые содержат похожее, но различное наполнение для реализации стратегии сложностей (EasySnakeStrategy, MediumSnakeStrategy и HardSnakeStrategy)\n" +
+            "  3) Класс SnakePart, который будет являться одним звеном будущей змейки\n" +
+            "  4) Класс SnakeFood, который будет отрисовывать на панель еду змейки\n" +
+            "\n" +
+            "  View:\n" +
+            "  1) Sample.fxml - файл, который хранит интерфейс пользовательского приложения\n" +
+            "  \n" +
+            "  Controller: \n" +
+            "  1) Controller.java - файл, в котором хранятся реализации для всех элементов на пользовательском интерфейсе Sample\n";
+    private Button buttonAbout;
+
     public HardSnakeStrategy() {
         newScene();
         score = new TextField("");
@@ -46,6 +83,23 @@ public class HardSnakeStrategy implements SnakeGame {
         score.setEditable(false);
         score.setDisable(true);
         pane.getChildren().add(score);
+
+        buttonAbout = new Button("About");
+        buttonAbout.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextArea textArea = new TextArea(about);
+                Pane pane = new Pane();
+                pane.getChildren().add(textArea);
+                Scene aboutScene = new Scene(pane);
+                aboutWindow = new Stage();
+                aboutWindow.setTitle("About");
+                aboutWindow.setScene(aboutScene);
+                aboutWindow.setResizable(false);
+                aboutWindow.show();
+            }
+        });
+        buttonAbout.setLayoutX(paneSide - 50);
     }
 
     public void start() {
@@ -125,10 +179,11 @@ public class HardSnakeStrategy implements SnakeGame {
                     text.setLayoutY(pane.getPrefHeight() / 2);
                     text.setWrappingWidth(pane.getPrefWidth());
                     pane.getChildren().add(text);
-                    System.out.println("Game Over " + snakeParts.size());
                     timer.cancel();
                     pane.getChildren().remove(score);
                     pane.getChildren().add(score);
+                    pane.getChildren().remove(buttonAbout);
+                    pane.getChildren().add(buttonAbout);
                 }
             snakePart.move();
         }
@@ -141,6 +196,12 @@ public class HardSnakeStrategy implements SnakeGame {
 
     public void removeSnake() {
         newWindow.close();
+        aboutWindow.close();
+    }
+
+    @Override
+    public String getAbout() {
+        return about;
     }
 
     public void newScene() {
