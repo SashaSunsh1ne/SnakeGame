@@ -19,13 +19,14 @@ public class SnakeFood extends Rectangle {
         super.setHeight(width);
         super.setWidth(width);
         super.setFill(Color.RED);
-        int x = (int) (random.nextInt((int) (pane.getPrefWidth() / width)) * width);
-        int y = (int) (random.nextInt((int) (pane.getPrefWidth() / width)) * width);
+        int x = (int) (pane.getPrefWidth() - width);
+        int y = (int) (pane.getPrefHeight() / 2);
         super.setX(x);
         super.setY(y);
         this.snakeParts = snakeParts;
         pane.getChildren().add(this);
         this.pane = pane;
+        //replaceFood();
     }
 
     public void replaceFood() {

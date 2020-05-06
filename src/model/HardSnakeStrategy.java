@@ -1,14 +1,12 @@
 package model;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
@@ -16,7 +14,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,10 +25,7 @@ public class HardSnakeStrategy implements SnakeGame {
     private TextField score;
 
     private Timer timer;
-    private TimerTask timerTask;
 
-    private int speed = 100;
-    private int width = 20;
     private int paneSide = 400;
 
     private List<SnakePart> snakeParts = new LinkedList<>();
@@ -100,45 +94,39 @@ public class HardSnakeStrategy implements SnakeGame {
         pane.getChildren().add(score);
 
         buttonAbout = new Button("About");
-        buttonAbout.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                TextArea textArea = new TextArea(about);
-                Pane pane = new Pane();
-                pane.getChildren().add(textArea);
-                Scene aboutScene = new Scene(pane);
-                aboutWindow = new Stage();
-                aboutWindow.setTitle("About");
-                aboutWindow.setScene(aboutScene);
-                aboutWindow.setResizable(false);
-                aboutWindow.show();
-            }
+        buttonAbout.setOnAction(event -> {
+            TextArea textArea = new TextArea(about);
+            textArea.setEditable(false);
+            Pane pane = new Pane();
+            pane.getChildren().add(textArea);
+            Scene aboutScene = new Scene(pane);
+            aboutWindow.setTitle("About");
+            aboutWindow.setScene(aboutScene);
+            aboutWindow.setResizable(false);
+            aboutWindow.show();
         });
-        buttonAbout.setLayoutX(paneSide - 50);
+        buttonAbout.setPrefWidth(paneSide);
+        buttonAbout.setAlignment(Pos.CENTER);
+        buttonAbout.setLayoutY(paneSide - 30);
     }
 
     public void start() {
-        timerSchedule(500, speed);
+        timerSchedule();
         newWindow.show();
     }
 
-    private void timerSchedule(int delay, int speed) {
+    private void timerSchedule() {
         timer = new Timer();
-        timerTask = new TimerTask() {
+        TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        draw();
-                    }
-                });
+                Platform.runLater(() -> draw());
             }
         };
-        timer.schedule(timerTask, delay, speed);
+        timer.schedule(timerTask, 500, 100);
     }
 
-    public void addPart() {
+    private void addPart() {
         SnakePart snakePart = new SnakePart(pane, snakeParts.get(snakeParts.size() - 1).getX(), snakeParts.get(snakeParts.size() - 1).getY());
         snakePart.setDirection(snakeParts.get(snakeParts.size() - 1).getDirection());
         snakePart.setPointsChangeDirectionD(snakeParts.get(snakeParts.size() - 1).getPointsChangeDirectionD());
@@ -156,7 +144,8 @@ public class HardSnakeStrategy implements SnakeGame {
         snakeParts.add(snakePart);
     }
 
-    public void addOnPane() {
+    private void addOnPane() {
+        int width = 20;
         for (double i = pane.getPrefWidth() / 2; i >= 0; i = i - width) {
             SnakePart snakePart = new SnakePart(pane, i, pane.getPrefHeight() / 2);
             snakeParts.add(snakePart);
@@ -177,7 +166,7 @@ public class HardSnakeStrategy implements SnakeGame {
         return false;
     }
 
-    public void changeDirection(Direction direction) {
+    private void changeDirection(Direction direction) {
         if (tryToChangeDirection(direction))
             for (SnakePart snakePart : snakeParts)
                 snakePart.addPointToChangeDirection(direction, snakeParts.get(0).getX(), snakeParts.get(0).getY());
@@ -203,10 +192,24 @@ public class HardSnakeStrategy implements SnakeGame {
             snakePart.move();
         }
         if (snakeParts.get(0).getX() == snakeFood.getX() && snakeParts.get(0).getY() == snakeFood.getY()) {
-            snakeFood.replaceFood();
             addPart();
+            snakeFood.replaceFood();
+            if (snakeParts.size() >= Math.pow(paneSide / 20, 2)) {
+                Text text = new Text("YOU WIN");
+                text.setFont(new Font(40));
+                text.setFill(Color.GREEN);
+                text.setTextAlignment(TextAlignment.CENTER);
+                text.setLayoutY(pane.getPrefHeight() / 2);
+                text.setWrappingWidth(pane.getPrefWidth());
+                pane.getChildren().add(text);
+                timer.cancel();
+                pane.getChildren().remove(score);
+                pane.getChildren().add(score);
+                pane.getChildren().remove(buttonAbout);
+                pane.getChildren().add(buttonAbout);
+            }
         }
-        score.setText(snakeParts.size()+"");
+        score.setText(snakeParts.size() + "");
     }
 
     public void removeSnake() {
@@ -214,16 +217,10 @@ public class HardSnakeStrategy implements SnakeGame {
         aboutWindow.close();
     }
 
-    @Override
-    public String getAbout() {
-        return about;
-    }
-
-    public void newScene() {
+    private void newScene() {
         pane = new Pane();
         pane.setPrefWidth(paneSide);
         pane.setPrefHeight(paneSide);
-        pane.setStyle("-fx-border-color: black");
 
         Button button = new Button();
         button.setPrefHeight(0);
@@ -231,37 +228,30 @@ public class HardSnakeStrategy implements SnakeGame {
         button.setLayoutX(-50);
         button.setLayoutY(-50);
 
-        button.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode() == KeyCode.W || keyEvent.getCode() == KeyCode.UP)
-                    changeDirection(Direction.UP);
-                if (keyEvent.getCode() == KeyCode.S || keyEvent.getCode() == KeyCode.DOWN)
-                    changeDirection(Direction.DOWN);
-                if (keyEvent.getCode() == KeyCode.D || keyEvent.getCode() == KeyCode.RIGHT)
-                    changeDirection(Direction.RIGHT);
-                if (keyEvent.getCode() == KeyCode.A || keyEvent.getCode() == KeyCode.LEFT)
-                    changeDirection(Direction.LEFT);
-            }
+        button.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.W || keyEvent.getCode() == KeyCode.UP)
+                changeDirection(Direction.UP);
+            if (keyEvent.getCode() == KeyCode.S || keyEvent.getCode() == KeyCode.DOWN)
+                changeDirection(Direction.DOWN);
+            if (keyEvent.getCode() == KeyCode.D || keyEvent.getCode() == KeyCode.RIGHT)
+                changeDirection(Direction.RIGHT);
+            if (keyEvent.getCode() == KeyCode.A || keyEvent.getCode() == KeyCode.LEFT)
+                changeDirection(Direction.LEFT);
         });
         pane.getChildren().add(button);
         Polyline borderLine = new Polyline(0, 0, paneSide, 0, paneSide, paneSide, 0, paneSide, 0, 0);
         borderLine.setStrokeWidth(5);
         borderLine.setStroke(Color.BLACK);
         pane.getChildren().add(borderLine);
+
         addOnPane();
 
-        Scene snakeScene = new Scene(pane, paneSide, paneSide);
+        Scene snakeScene = new Scene(pane);
 
         newWindow = new Stage();
         newWindow.setTitle("SnakeGame");
         newWindow.setScene(snakeScene);
         newWindow.setResizable(false);
-        newWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                timer.cancel();
-            }
-        });
+        newWindow.setOnCloseRequest(event -> timer.cancel());
     }
 }
