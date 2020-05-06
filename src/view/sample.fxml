@@ -13,7 +13,7 @@
             <RadioButton fx:id="medium" layoutX="86.0" layoutY="26.0" mnemonicParsing="false" text="Medium" />
             <RadioButton fx:id="easy" layoutX="14.0" layoutY="26.0" mnemonicParsing="false" text="Easy" />
             <RadioButton fx:id="hard" layoutX="178.0" layoutY="26.0" mnemonicParsing="false" text="Hard" />
-            <Button fx:id="start1" layoutX="347.0" layoutY="21.0" mnemonicParsing="false" onAction="#restart" text="QUIT" />
+            <Button layoutX="347.0" layoutY="21.0" mnemonicParsing="false" onAction="#quit" text="QUIT" />
          </children></Pane>
    </top>
 </BorderPane>

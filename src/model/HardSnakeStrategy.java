@@ -169,10 +169,10 @@ public class HardSnakeStrategy implements SnakeGame {
             }
         });
         pane.getChildren().add(button);
-        Polyline pLine = new Polyline(0, 0, paneSide, 0, paneSide, paneSide, 0, paneSide, 0, 0);
-        pLine.setStrokeWidth(5);
-        pLine.setStroke(Color.BLACK);
-        pane.getChildren().add(pLine);
+        Polyline borderLine = new Polyline(0, 0, paneSide, 0, paneSide, paneSide, 0, paneSide, 0, 0);
+        borderLine.setStrokeWidth(5);
+        borderLine.setStroke(Color.BLACK);
+        pane.getChildren().add(borderLine);
         addOnPane();
 
         Scene snakeScene = new Scene(pane, paneSide, paneSide);

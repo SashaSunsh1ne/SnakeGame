@@ -45,4 +45,8 @@ public class Controller implements Initializable {
         else if (hard.isSelected())
             startSnake(new HardSnakeStrategy());
     }
+
+    public void quit(ActionEvent actionEvent) {
+        System.exit(-1);
+    }
 }

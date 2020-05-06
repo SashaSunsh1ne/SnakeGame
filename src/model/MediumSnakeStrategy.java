@@ -168,10 +168,10 @@ public class MediumSnakeStrategy implements SnakeGame{
             }
         });
         pane.getChildren().add(button);
-        Polyline pLine = new Polyline(0, 0, paneSide, 0, paneSide, paneSide, 0, paneSide, 0, 0);
-        pLine.setStrokeWidth(5);
-        pLine.setStroke(Color.BLACK);
-        pane.getChildren().add(pLine);
+        Polyline borderLine = new Polyline(0, 0, paneSide, 0, paneSide, paneSide, 0, paneSide, 0, 0);
+        borderLine.setStrokeWidth(5);
+        borderLine.setStroke(Color.BLACK);
+        pane.getChildren().add(borderLine);
         addOnPane();
 
         StackPane secondaryLayout = new StackPane();
@@ -191,9 +191,5 @@ public class MediumSnakeStrategy implements SnakeGame{
                 timer.cancel();
             }
         });
-        /*newWindow.setMaxHeight(paneSide + 100);
-        newWindow.setMaxWidth(paneSide + 100);
-        newWindow.setMinWidth(paneSide);
-        newWindow.setMinHeight(paneSide);*/
     }
 }
