@@ -36,7 +36,7 @@ public class Controller implements Initializable {
         start.setText("RESTART");
     }
 
-    public void restart(ActionEvent actionEvent) throws IOException {
+    public void restart(ActionEvent actionEvent) {
         snakeGame.removeSnake();
         if (easy.isSelected())
             startSnake(new EasySnakeStrategy());
