@@ -3,7 +3,7 @@ package model;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import model.SnakeGame.Direction;
+import model.Snake.*;
 
 import java.util.LinkedList;
 import java.util.List;
