@@ -7,13 +7,38 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Класс по управлению "едой" змейки
+ * @see Rectangle (Класс-родитель)
+ * @author Golikov Alexandr
+ * @version 1
+ */
 public class SnakeFood extends Rectangle {
 
+    /**
+     * Панель для отображения "еды"
+     * @see Pane - Панель
+     */
     private Pane pane;
+    /**
+     * Список, который хранит все части змейки (ячейки)
+     * @see SnakePart - Часть змейки
+     */
     private List<SnakePart> snakeParts;
+    /**
+     * Переменная создающая случайные числа и значения
+     */
     private Random random = new Random();
+    /**
+     * Переменная, хранящая ширину "еды"
+     */
     final private double width = 20;
 
+    /**
+     * Конструктор класса, принимающий две переменные
+     * @param pane
+     * @param snakeParts
+     */
     public SnakeFood (Pane pane, List<SnakePart> snakeParts) {
         super();
         super.setHeight(width);
@@ -26,9 +51,11 @@ public class SnakeFood extends Rectangle {
         this.snakeParts = snakeParts;
         pane.getChildren().add(this);
         this.pane = pane;
-        //replaceFood();
     }
 
+    /**
+     * Метод для изменения координат "еды"
+     */
     public void replaceFood() {
         boolean isMatch;
         int x = 0;

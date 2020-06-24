@@ -20,33 +20,69 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Snake {
+/**
+ * Класс, создающий змейку по переданным параметрам из стратегии.
+ * @author Golikov Alexandr
+ * @version 1
+ */
+public class Snake implements SnakeGame {
 
+    /**
+     * Перечисления, в котором хранятся все возможные направления змейки (ВВЕРХ, ВНИЗ, ВЛЕВО, ВПРАВО)
+     */
     enum Direction {UP, DOWN, RIGHT, LEFT}
 
+    /**
+     * Переменная, хранящая счет игрока
+     * @see TextField - Текстовое поле
+     */
     private TextField score;
 
+    /**
+     * Переменная, хранящая таймер игры, запускающийся
+     * при начале новои игры и отключающийся при ее завершении.
+     * @see Timer - Таймер
+     */
     private Timer timer;
 
+    /**
+     * Переменная, хранящая сторону панели (в пикселях),
+     * на которую будет выведена змейка
+     */
     private int paneSide;
+    /**
+     * Переменная, хранящая скорость зейки
+     * (задержка между перемещениями в миллисекундах)
+     */
     private int speed;
 
+    /**
+     * Список, который хранит все части змейки (ячейки)
+     * @see SnakePart - Часть змейки
+     */
     private List<SnakePart> snakeParts = new LinkedList<>();
+    /**
+     * Переменная "еда змеи" для отображения ее на панели
+     * @see SnakeFood - "Еда" змейки
+     */
     private SnakeFood snakeFood;
+    /**
+     * Панель для отображения всех элементов игры
+     * @see Pane - Панель
+     */
     private Pane pane;
+    /**
+     * Переменная в которую помещается новое окно с игрой
+     * @see Stage - Окно
+     */
     private Stage newWindow;
 
-    private Stage aboutWindow = new Stage();
-    private String about = "# SnakeGame\n" +
-            "Сложности:\n" +
-            "  1) Легкая - скорость маленькая, размер поля - 200x200 пикселей\n" +
-            "  2) Средняя - скорость средняя, размер поля - 200x200 пикселей\n" +
-            "  3) Сложная - скорость высокая, размер поля - 400x400 пикселей\n" +
-            "Проигрыш происходит, если змейка врежется с себя\n" +
-            "Выигрыш происходит, если змейка достигнет своего \n" +
-            "максимального размера на поле\n";
-    private Button buttonAbout;
-
+    /**
+     * Конструктор, создающий экземпляр класса со значениями,
+     * которые передает класс-стратегия
+     * @param paneSide
+     * @param speed
+     */
     public Snake(int paneSide, int speed) {
         this.paneSide = paneSide;
         this.speed = speed;
@@ -56,29 +92,21 @@ public class Snake {
         score.setEditable(false);
         score.setDisable(true);
         pane.getChildren().add(score);
-
-        buttonAbout = new Button("About");
-        buttonAbout.setOnAction(event -> {
-            TextArea textArea = new TextArea(about);
-            textArea.setEditable(false);
-            Pane pane = new Pane();
-            pane.getChildren().add(textArea);
-            Scene aboutScene = new Scene(pane);
-            aboutWindow.setTitle("About");
-            aboutWindow.setScene(aboutScene);
-            aboutWindow.setResizable(false);
-            aboutWindow.show();
-        });
-        buttonAbout.setPrefWidth(paneSide);
-        buttonAbout.setAlignment(Pos.CENTER);
-        buttonAbout.setLayoutY(paneSide - 30);
     }
 
+    /**
+     * Метод, отвечающий за начало игры
+     * (запуск таймера и открытие окна с игрой)
+     */
     public void start() {
         timerSchedule();
         newWindow.show();
     }
 
+    /**
+     * Метод, устанавливающийсть скорость змейки
+     * (устанавливает расписание теймера)
+     */
     private void timerSchedule() {
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -90,6 +118,9 @@ public class Snake {
         timer.schedule(timerTask, 500, speed);
     }
 
+    /**
+     * Метод для добавления новой части змейки
+     */
     private void addPart() {
         SnakePart snakePart = new SnakePart(pane, snakeParts.get(snakeParts.size() - 1).getX(), snakeParts.get(snakeParts.size() - 1).getY());
         snakePart.setDirection(snakeParts.get(snakeParts.size() - 1).getDirection());
@@ -108,6 +139,10 @@ public class Snake {
         snakeParts.add(snakePart);
     }
 
+    /**
+     * Метод, который добавляет на панель начальную змейку
+     * (длина равна половине ширины панели)
+     */
     private void addOnPane() {
         int width = 20;
         for (double i = pane.getPrefWidth() / 2; i >= 0; i = i - width) {
@@ -118,6 +153,12 @@ public class Snake {
         snakeFood = new SnakeFood(pane, snakeParts);
     }
 
+    /**
+     * Метод, предназначенный для проверки возможности
+     * изменения направления змейки в указанную сторону
+     * @param direction принимает новое направление
+     * @return Возвращает истину или ложь (Можно ли изменить направление или нет)
+     */
     private boolean tryToChangeDirection(Direction direction) {
         if (direction == Direction.UP && snakeParts.get(0).getDirection() != Direction.UP && snakeParts.get(0).getDirection() != Direction.DOWN)
             return true;
@@ -130,12 +171,19 @@ public class Snake {
         return false;
     }
 
+    /**
+     * Метод для изменения напрвавления
+     * @param direction принимает новое направление
+     */
     private void changeDirection(Direction direction) {
         if (tryToChangeDirection(direction))
             for (SnakePart snakePart : snakeParts)
                 snakePart.addPointToChangeDirection(direction, snakeParts.get(0).getX(), snakeParts.get(0).getY());
     }
 
+    /**
+     * Метод для отображения всех элеметов игры на панели
+     */
     private void draw() {
         for (SnakePart snakePart : snakeParts) {
             if (snakePart != snakeParts.get(0))
@@ -150,8 +198,6 @@ public class Snake {
                     timer.cancel();
                     pane.getChildren().remove(score);
                     pane.getChildren().add(score);
-                    pane.getChildren().remove(buttonAbout);
-                    pane.getChildren().add(buttonAbout);
                 }
             snakePart.move();
         }
@@ -169,18 +215,21 @@ public class Snake {
                 timer.cancel();
                 pane.getChildren().remove(score);
                 pane.getChildren().add(score);
-                pane.getChildren().remove(buttonAbout);
-                pane.getChildren().add(buttonAbout);
             }
         }
         score.setText(snakeParts.size() + "");
     }
 
+    /**
+     * Метод для удаления элементов игры с панели
+     */
     public void removeSnake() {
         newWindow.close();
-        aboutWindow.close();
     }
 
+    /**
+     * Метод создающий новое окно игры
+     */
     private void newScene() {
         pane = new Pane();
         pane.setPrefWidth(paneSide);
